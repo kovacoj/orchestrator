@@ -16,6 +16,19 @@ Install OpenCode using your normal team-approved install path, then verify:
 opencode --version
 ```
 
+## Git secret scanning hook
+
+This repo includes a pre-commit hook at `.githooks/pre-commit` that runs `gitleaks` against staged changes.
+
+Enable repository hooks path once per clone:
+
+```bash
+git config core.hooksPath .githooks
+chmod +x .githooks/pre-commit
+```
+
+If `gitleaks` is missing, commits are blocked until it is installed.
+
 ## Required Local Secrets
 
 Create a local `.env` from `.env.example` and fill in the values you use:
