@@ -89,13 +89,18 @@ The orchestrator may call n8n only through approved local MCP tools:
 - `sf_get_session_state`
 - `sf_get_session_alerts`
 - `sf_trigger_demo_monitor`
+- `sf_build_monitoring_plan`
 
 n8n workflows may call the Signal Foundry backend:
 
 - `POST /sessions/{session_id}/refresh`
-- `GET /sessions/{session_id}/cards`
-- `GET /sessions/{session_id}/alerts`
-- `POST /sessions/{session_id}/alerts`
+- `POST /sessions/{session_id}/monitoring-plan/build`
+- `GET  /sessions/{session_id}/monitoring-plan`
+- `GET  /sessions/{session_id}/dashboard`
+- `GET  /sessions/{session_id}/charts/{chart_id}/data`
+- `GET  /sessions/{session_id}/cards` *(not yet implemented in slice)*
+- `GET  /sessions/{session_id}/alerts` *(not yet implemented in slice)*
+- `POST /sessions/{session_id}/alerts` *(not yet implemented in slice)*
 
 Do not expose full workflow administration over MCP.
 
@@ -121,3 +126,19 @@ n8n schedule/manual trigger
 → backend `/refresh`
 → IF `prediction_changed`
 → alert output
+
+## Signal Foundry backend (slice)
+
+The FastAPI backend lives in the submodule at `experiment-lab/app/api/`.
+Run it with:
+
+```bash
+cd experiment-lab && uv run uvicorn app.api.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+The current slice only wires session `demo_miners` (scenario
+`reputation_monitor`) and chart `sentiment_trend_by_location`. Other
+sessions, charts, alerts, anomaly detection, and decision-card generation
+are intentionally out of scope. On-disk state lives under
+`experiment-lab/tmp/sessions/`; override the base directory via
+`EXPERIMENT_LAB_API_TMP_DIR` (the test suite uses this for isolation).
