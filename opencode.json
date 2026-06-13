@@ -531,11 +531,14 @@
       "oauth": false,
       "enabled": true
     },
-    "n8n": {
+    "n8n-local": {
       "type": "remote",
       "url": "{env:N8N_MCP_URL}",
+      "headers": {
+        "Authorization": "Bearer {env:N8N_MCP_TOKEN}"
+      },
       "oauth": false,
-      "enabled": false
+      "enabled": true
     }
   },
 

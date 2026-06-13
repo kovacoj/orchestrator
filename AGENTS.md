@@ -54,3 +54,67 @@ Core experiment-lab command:
 ```bash
 cd experiment-lab && uv run python -m app.agent_skills.experiment_lab_cli run-analysis --scenario reputation_monitor --format json
 ```
+
+## Apify subagent testing rules
+
+When testing Apify integration, use subagents with strict boundaries:
+
+- SourceScoutSubagent may plan Apify collection.
+- ApifyRunnerSubagent may call Apify MCP.
+- TextNormalizerSubagent converts raw Apify output into TextDocumentSignal records.
+- LabRunnerSubagent runs only the local experiment-lab skill.
+- CriticSubagent compares evidence against lab findings.
+
+Labs must not call Apify directly.
+
+For demo stability:
+- cap Apify result count to 20 items per scenario;
+- preserve raw evidence text and source URLs;
+- never overwrite app/demo_data fixtures;
+- write temporary live results under tmp/sessions/;
+- fall back to cached fixtures when live Apify fails;
+- record all failures explicitly.
+
+Approved test scenarios:
+- reputation_monitor
+- supply_chain_risk
+
+## n8n local MCP rules
+
+n8n is the workflow runner for Signal Foundry. It is not the intelligence layer.
+
+The orchestrator may call n8n only through approved local MCP tools:
+
+- `sf_refresh_session`
+- `sf_get_session_alerts`
+- `sf_trigger_demo_monitor`
+
+n8n workflows may call the Signal Foundry backend:
+
+- `POST /sessions/{session_id}/refresh`
+- `GET /sessions/{session_id}/alerts`
+
+Do not expose full workflow administration over MCP.
+
+Forbidden n8n MCP capabilities:
+
+- create arbitrary workflow
+- edit arbitrary workflow
+- delete workflow
+- read credentials
+- arbitrary HTTP request
+- arbitrary email sending
+- arbitrary Slack/Discord sending
+- shell/filesystem access
+
+For demo stability, n8n should call cached/mock backend modes:
+
+- `APIFY_MODE=cached`
+- `HF_MODE=mock`
+
+The core monitoring loop is:
+
+n8n schedule/manual trigger
+→ backend `/refresh`
+→ IF `prediction_changed`
+→ alert output
