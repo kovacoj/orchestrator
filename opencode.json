@@ -4,56 +4,38 @@
   // ════════════════════════════════════════════════════════════════
   //  DEFAULT MODEL
   // ════════════════════════════════════════════════════════════════
-  "model": "siemens-sdc-openai-responses/gpt-5.3-codex",
+  "model": "siemens-sdc/claude-opus-4-7@default",
   "small_model": "siemens/ministral-3-14b-instruct-2512",
 
   "agent": {
     "general": {
-      "model": "siemens-sdc-openai-responses/gpt-5.3-codex",
-      "options": {
-        "reasoningEffort": "medium"
-      }
+      "model": "siemens-sdc/claude-opus-4-7@default"
     },
     "explore": {
-      "model": "siemens-sdc-openai-responses/gpt-5.3-codex",
-      "options": {
-        "reasoningEffort": "medium"
-      }
+      "model": "siemens-sdc/claude-opus-4-7@default"
     },
     "experiment-runner": {
       "mode": "subagent",
       "description": "Runs experiment-lab scenarios via the stable local CLI wrapper.",
-      "model": "siemens-sdc-openai-responses/gpt-5.3-codex",
-      "options": {
-        "reasoningEffort": "medium"
-      },
+      "model": "siemens-sdc/claude-opus-4-7@default",
       "prompt": "Use experiment-lab deterministic CLI only: uv run python -m app.agent_skills.experiment_lab_cli ... . Do not import random internals."
     },
     "refresh-compare-runner": {
       "mode": "subagent",
       "description": "Runs refresh-compare analysis and reports prediction drift.",
-      "model": "siemens-sdc-openai-responses/gpt-5.3-codex",
-      "options": {
-        "reasoningEffort": "medium"
-      },
+      "model": "siemens-sdc/claude-opus-4-7@default",
       "prompt": "Run refresh-compare with experiment-lab CLI and return structured differences only."
     },
     "decision-card-runner": {
       "mode": "subagent",
       "description": "Builds and validates decision-card outputs from lab reports.",
-      "model": "siemens-sdc-openai-responses/gpt-5.3-codex",
-      "options": {
-        "reasoningEffort": "medium"
-      },
+      "model": "siemens-sdc/claude-opus-4-7@default",
       "prompt": "Use lab report outputs and decision card payloads from experiment-lab CLI. Keep behavior deterministic."
     },
     "text-engine-runner": {
       "mode": "subagent",
       "description": "Validates text-engine processing for experiment-lab scenarios.",
-      "model": "siemens-sdc-openai-responses/gpt-5.3-codex",
-      "options": {
-        "reasoningEffort": "medium"
-      },
+      "model": "siemens-sdc/claude-opus-4-7@default",
       "prompt": "Use local deterministic text-engine and lab fixtures only; no external API calls."
     }
   },
