@@ -1,0 +1,28 @@
+{
+  "mcpServers": {
+    "apify": {
+      "type": "http",
+      "url": "https://mcp.apify.com"
+    },
+    "huggingface": {
+      "type": "stdio",
+      "command": "uv",
+      "args": [
+        "run",
+        "python",
+        "-m",
+        "app.mcp_servers.huggingface_server"
+      ],
+      "env": {
+        "HF_MODE": "mock"
+      }
+    },
+    "lovable": {
+      "type": "http",
+      "url": "YOUR_LOVABLE_MCP_URL",
+      "headers": {
+        "Authorization": "Bearer ${LOVABLE_TOKEN}"
+      }
+    }
+  }
+}
