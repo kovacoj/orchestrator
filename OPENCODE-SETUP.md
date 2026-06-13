@@ -59,6 +59,30 @@ Demo stability defaults:
 
 After changing `opencode.json`, restart OpenCode so the updated MCP config is loaded.
 
+## Lovable connection (Cloudflare tunnel)
+
+If `cloudflared` is not installed system-wide, install a user-local binary:
+
+```bash
+curl -L -o "$HOME/.local/bin/cloudflared" "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64"
+chmod +x "$HOME/.local/bin/cloudflared"
+cloudflared --version
+```
+
+Run OpenCode server with Lovable CORS origin:
+
+```bash
+opencode serve --port 4096 --hostname 127.0.0.1 --cors https://insight-buddy-702.lovable.app
+```
+
+In another terminal, create a quick Cloudflare tunnel:
+
+```bash
+cloudflared tunnel --url http://127.0.0.1:4096
+```
+
+Use the generated `https://...trycloudflare.com` URL in Lovable.
+
 ## Experiment Lab Skill
 
 Read:
