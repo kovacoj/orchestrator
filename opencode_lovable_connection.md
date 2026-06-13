@@ -4,6 +4,9 @@ curl -L -o /tmp/cloudflared.deb https://github.com/cloudflare/cloudflared/releas
 sudo dpkg -i /tmp/cloudflared.deb
 cloudflared --version
 
+## Run Cloudflare
+cloudflared tunnel --url http://127.0.0.1:4096
+
 ## Run opencode server
 
 opencode serve \
