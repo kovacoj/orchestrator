@@ -206,6 +206,79 @@
     },
 
     // ════════════════════════════════════════════════════════════════
+    //  SDC LLM GATEWAY — ANTHROPIC / CLAUDE
+    //  Endpoint: /v1/messages
+    // ════════════════════════════════════════════════════════════════
+    "siemens-sdc": {
+      "npm": "@ai-sdk/anthropic",
+      "name": "Siemens SDC LLM Gateway - Claude",
+      "options": {
+        "baseURL": "https://llm.sdc.siemens.cloud/v1",
+        "apiKey": "{env:SIEMENS_SDC_API_KEY}",
+        "headers": {
+          "x-api-key": "{env:SIEMENS_SDC_API_KEY}",
+          "SIEMENS_SDC_API_KEY": "{env:SIEMENS_SDC_API_KEY}"
+        }
+      },
+      "models": {
+        "claude-opus-4-5@20251101": {
+          "name": "Claude Opus 4.5 via SDC",
+          "attachment": true,
+          "reasoning": true,
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          }
+        },
+        "claude-haiku-4-5@20251001": {
+          "name": "Claude Haiku 4.5 via SDC",
+          "attachment": true,
+          "reasoning": true,
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          }
+        },
+        "claude-sonnet-4-5@20250929": {
+          "name": "Claude Sonnet 4.5 via SDC",
+          "attachment": true,
+          "reasoning": true,
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          }
+        },
+        "claude-sonnet-4-6@default": {
+          "name": "Claude Sonnet 4.6 via SDC",
+          "attachment": true,
+          "reasoning": true,
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          }
+        },
+        "claude-opus-4-6@default": {
+          "name": "Claude Opus 4.6 via SDC",
+          "attachment": true,
+          "reasoning": true,
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          }
+        },
+        "claude-opus-4-7@default": {
+          "name": "Claude Opus 4.7 via SDC",
+          "attachment": true,
+          "reasoning": true,
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          }
+        }
+      }
+    },
+
+    // ════════════════════════════════════════════════════════════════
     //  SDC LLM GATEWAY — OPENAI CHAT COMPLETIONS
     //  Endpoint: /v1/chat/completions
     //
