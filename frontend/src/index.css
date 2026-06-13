@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+      "Helvetica Neue", Arial, sans-serif;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-white rounded-lg border border-slate-200 shadow-card;
+  }
+  .card-pad {
+    @apply p-5;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium;
+  }
+  .chip-good {
+    @apply bg-emerald-100 text-emerald-700;
+  }
+  .chip-watch {
+    @apply bg-amber-100 text-amber-700;
+  }
+  .chip-warning {
+    @apply bg-rose-100 text-rose-700;
+  }
+  .chip-opportunity {
+    @apply bg-indigo-100 text-indigo-700;
+  }
+  .chip-suppressed {
+    @apply bg-slate-200 text-slate-600;
+  }
+  .chip-neutral {
+    @apply bg-slate-100 text-slate-700;
+  }
+}

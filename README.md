@@ -20,29 +20,36 @@ The project is built around this core principle:
 
 ## 0. Subsystems
 
-This repo currently contains two parallel subsystems:
+This repo currently contains three parallel subsystems:
 
 | Path              | Purpose                                                                                          | Status                  |
 |-------------------|--------------------------------------------------------------------------------------------------|-------------------------|
 | `experiment-lab/` | Deterministic research-lab engine for the long-form Signal Foundry product (read-only submodule) | Under active build      |
 | `hackathon/`      | Self-contained **MarketTwin / Agentic Decision Lab** demo (Apify → n8n → SQLite/Supabase → analysis → Lovable) | Runnable end-to-end |
+| `frontend/`       | Reputation-monitor dashboard (React + TS + Vite + Tailwind + Recharts) for the Prague coffee-chain demo | Builds & runs locally |
 
-The hackathon subsystem is independent — it has its own FastAPI app, its
-own schema, its own n8n workflows, and its own demo script. It does **not**
-import from `experiment-lab/`.
+Each subsystem is independent. The hackathon subsystem has its own FastAPI
+app, schema, n8n workflows, and demo script. The frontend subsystem ships
+with local artificial data and does not require any live backend.
 
-Quick path to the demo:
+Quick paths:
 
 ```bash
+# Hackathon backend (MarketTwin)
 cd hackathon
 uv venv && uv pip install -e ".[test]"
 make seed       # populates local SQLite with 1 scrape + 5 recommendations
 make smoke      # in-process end-to-end check
 make api        # FastAPI on :8001 — open /docs
+
+# Reputation-monitor frontend (Prague coffee chain)
+cd frontend
+npm install
+npm run dev     # http://localhost:5173
 ```
 
-See `hackathon/README.md` for endpoints, n8n wiring, Supabase setup, and
-`hackathon/DEMO.md` for the 3-minute walkthrough script.
+See `hackathon/README.md`, `hackathon/DEMO.md`, `frontend/README.md`, and
+`docs/reputation-dashboard-spec.md` for details.
 
 ---
 
