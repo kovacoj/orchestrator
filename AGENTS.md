@@ -33,8 +33,16 @@ Local skills:
 MCP servers:
 - Apify for external data collection
 - Hugging Face for optional model enrichment
-- Lovable for frontend/app generation
 - n8n webhook/MCP for monitoring workflows
+
+Frontend generation is owned by the orchestrator directly. The React
+dashboard lives in `frontend/` (Vite + React + Tailwind + recharts);
+`npm run build` emits the bundle into
+`experiment-lab/app/static_react/`, which the FastAPI backend mounts at
+`/app/`. There is no external frontend-generation MCP server in the
+loop — when the dashboard needs to change, edit `frontend/src/` and
+rebuild. The static "0 to 100" overview dashboard at `/ui/` is the
+single-file fallback served straight out of `experiment-lab/app/static/`.
 
 Do not let labs call raw MCP tools directly.
 External data/model outputs must be converted into typed artifacts before labs consume them.

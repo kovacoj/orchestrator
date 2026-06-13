@@ -1,6 +1,6 @@
 """
 In-process smoke test: scrape → normalize → analyze → approve.
-No HTTP server, no Apify, no Lovable. Pure verification that the data
+No HTTP server, no Apify, no UI. Pure verification that the data
 layer + analysis engine produce sensible output.
 
     cd hackathon && uv run python scripts/smoke_test.py

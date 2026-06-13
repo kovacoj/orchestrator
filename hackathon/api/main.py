@@ -324,7 +324,7 @@ def list_agent_logs(limit: int = Query(default=100, ge=1, le=500)) -> list[Agent
 
 
 # ─────────────────────────────────────────────────────────────────────────
-# Dashboard (one-shot data contract for Lovable)
+# Dashboard (one-shot data contract for the React frontend)
 # ─────────────────────────────────────────────────────────────────────────
 
 @app.get("/dashboard", response_model=DashboardResponse)

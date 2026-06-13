@@ -641,20 +641,20 @@
       "oauth": false,
       "enabled": true
     },
-    "lovable": {
-      "type": "remote",
-      "url": "{env:LOVABLE_MCP_URL}",
-      "headers": {
-        "Authorization": "Bearer {env:LOVABLE_TOKEN}"
-      },
-      "oauth": false,
-      "enabled": true
-    },
     "n8n-local": {
       "type": "remote",
       "url": "{env:N8N_MCP_URL}",
       "headers": {
         "Authorization": "Bearer {env:N8N_MCP_TOKEN}"
+      },
+      "oauth": false,
+      "enabled": true
+    },
+    "signal-foundry-mcp": {
+      "type": "remote",
+      "url": "{env:SF_MCP_URL}",
+      "headers": {
+        "Authorization": "Bearer {env:SF_MCP_TOKEN}"
       },
       "oauth": false,
       "enabled": true

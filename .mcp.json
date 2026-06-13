@@ -17,13 +17,6 @@
         "HF_MODE": "mock"
       }
     },
-    "lovable": {
-      "type": "http",
-      "url": "YOUR_LOVABLE_MCP_URL",
-      "headers": {
-        "Authorization": "Bearer ${LOVABLE_TOKEN}"
-      }
-    },
     "n8n-local": {
       "type": "http",
       "url": "${N8N_MCP_URL}",

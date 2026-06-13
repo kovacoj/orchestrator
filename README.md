@@ -25,7 +25,7 @@ This repo currently contains three parallel subsystems:
 | Path              | Purpose                                                                                          | Status                  |
 |-------------------|--------------------------------------------------------------------------------------------------|-------------------------|
 | `experiment-lab/` | Deterministic research-lab engine for the long-form Signal Foundry product (read-only submodule) | Under active build      |
-| `hackathon/`      | Self-contained **MarketTwin / Agentic Decision Lab** demo (Apify → n8n → SQLite/Supabase → analysis → Lovable) | Runnable end-to-end |
+| `hackathon/`      | Self-contained **MarketTwin / Agentic Decision Lab** demo (Apify → n8n → SQLite/Supabase → analysis → React dashboard) | Runnable end-to-end |
 | `frontend/`       | Reputation-monitor dashboard (React + TS + Vite + Tailwind + Recharts) for the Prague coffee-chain demo | Builds & runs locally |
 
 Each subsystem is independent. The hackathon subsystem has its own FastAPI
@@ -62,8 +62,10 @@ opencode orchestrator
   │
   ├── MCP integrations
   │   ├── Apify MCP
-  │   ├── n8n local MCP
-  │   └── Lovable MCP
+  │   └── n8n local MCP
+  │
+  ├── frontend generation
+  │   └── owned by orchestrator (frontend/ → experiment-lab/app/static_react/)
   │
   └── project rules
       ├── AGENTS.md
@@ -155,7 +157,6 @@ Current repository structure:
 │   ├── pyproject.toml
 │   └── uv.lock
 ├── opencode.json
-├── opencode_lovable_connection.md
 └── skills/
     └── experiment-lab/
         └── SKILL.md
@@ -200,8 +201,13 @@ Planned/current MCP integrations:
 ```text
 Apify MCP      → external web/review/supplier data collection
 n8n MCP        → workflow execution, refresh, scheduling, alert delivery
-Lovable MCP    → frontend/dashboard generation
 ```
+
+Frontend/dashboard generation is owned by the orchestrator directly —
+no external generation MCP is wired. The React dashboard lives in
+`frontend/`; `npm run build` emits the bundle into
+`experiment-lab/app/static_react/`, which the FastAPI backend mounts
+at `/app/`.
 
 Hugging Face MCP is **not required** for the demo. Instead, the project uses a locally downloaded Hugging Face model for sentiment analysis.
 
@@ -1089,7 +1095,6 @@ Current opencode files:
 
 ```text
 opencode.json
-opencode_lovable_connection.md
 ```
 
 Expected opencode responsibilities:
@@ -1099,7 +1104,7 @@ coordinate subagents
 use local experiment-lab skill
 call Apify MCP for external data
 call n8n MCP for workflow refresh
-call Lovable MCP for frontend generation
+own frontend generation directly (frontend/ → experiment-lab/app/static_react/)
 never let labs call raw MCP directly
 ```
 
@@ -1140,7 +1145,7 @@ Strict tool boundaries:
 | CriticSubagent         | local lab report / evidence  |
 | DashboardSpecSubagent  | backend/dashboard schemas    |
 | n8nWorkflowSubagent    | n8n MCP only                 |
-| FrontendSubagent       | Lovable MCP / frontend files |
+| FrontendSubagent       | frontend/ source + npm build |
 
 Forbidden:
 
@@ -1230,7 +1235,7 @@ sentiment download/smoke scripts
 Apify → sentiment test artifacts
 n8n local MCP documentation
 opencode setup files
-Lovable connection notes
+orchestrator-owned React frontend (frontend/)
 tests for core lab/text-engine components
 ```
 
@@ -1597,30 +1602,22 @@ This makes the workflow reproducible across machines.
 
 ## 17.12 Frontend Application
 
-No frontend app is visible in the tree.
+A React frontend lives in `frontend/`; the orchestrator owns
+generation directly (no external generation MCP). `npm run build`
+emits the bundle into `experiment-lab/app/static_react/`, which the
+FastAPI backend mounts at `/app/`.
 
-Missing:
-
-```text
-frontend/
-or Lovable-generated app
-dashboard components
-DynamicChartCard
-DecisionCardGrid
-AlertTimeline
-API client
-polling logic
-```
-
-Frontend should render from backend specs:
+Frontend renders from backend specs:
 
 ```text
 GET /sessions/{id}/dashboard
 GET /sessions/{id}/charts/{chart_id}/data
 GET /sessions/{id}/alerts
+GET /sessions/{id}/cards
+GET /sessions/{id}/context
 ```
 
-Lovable should build UI against those contracts, not invent backend logic.
+The frontend should consume those contracts, not invent backend logic.
 
 ---
 
@@ -1670,8 +1667,6 @@ SIGNAL_FOUNDRY_API_URL=http://localhost:8000
 
 N8N_MCP_TOKEN=dev_signal_foundry_mcp_token_change_me
 N8N_WEBHOOK_URL=http://localhost:5678
-
-LOVABLE_TOKEN=
 ```
 
 ---
@@ -1736,7 +1731,7 @@ Use this order:
 
 12. Create n8n workflows and export JSON.
 
-13. Build Lovable/frontend dashboard from DashboardSpec.
+13. Build React frontend dashboard from DashboardSpec (frontend/ → static_react/).
 
 14. Add demo script and CI.
 ```

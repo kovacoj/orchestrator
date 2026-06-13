@@ -21,12 +21,12 @@ Then in a separate terminal:
 # Activate workflow_1_scheduled_scrape_synthetic.
 ```
 
-Lovable dashboard pointed at `VITE_MARKETWIN_API_URL=http://<host>:8001`,
+React dashboard pointed at `VITE_MARKETWIN_API_URL=http://<host>:8001`,
 open in the browser. Confirm KPIs render and you see 5 pending recs.
 
 Two browser tabs:
 
-- **Tab 1** — the Lovable dashboard.
+- **Tab 1** — the React dashboard.
 - **Tab 2** — `http://127.0.0.1:8001/agent-logs?limit=20` (raw JSON, big
   font). This is the "auditability" proof.
 
@@ -110,7 +110,7 @@ The rejection lands in the dashboard and the agent log.
 
 > "Architecture: Apify for collection, n8n for orchestration, FastAPI +
 > SQLite/Supabase for state, a pure-Python analysis engine for the
-> recommendation, Lovable for the UI. Five purpose-built subagent roles,
+> recommendation, an orchestrator-owned React frontend for the UI. Five purpose-built subagent roles,
 > each pinned to a specific model with a specific reasoning effort. Zero
 > autonomous side effects. Full audit trail. Ready to plug a real Apify
 > actor into a real Supabase project."
@@ -122,12 +122,12 @@ The rejection lands in the dashboard and the agent log.
 | Dashboard empty                  | `make seed` — re-seeds local DB |
 | `/scrapes/run` 500s              | check `APIFY_MODE` — default `cached` is safe |
 | n8n can't reach backend          | use `http://host.docker.internal:8001` from n8n containers |
-| Lovable shows CORS error         | the API has `allow_origins=["*"]` — re-check `VITE_MARKETWIN_API_URL` |
+| React dashboard shows CORS error | the API has `allow_origins=["*"]` — re-check `VITE_MARKETWIN_API_URL` |
 | Need to reset everything         | `make clean && make seed` |
 
 ## Backup plan: no-UI demo
 
-If Lovable / n8n are down, run the smoke test and narrate the output —
+If the React dashboard / n8n are down, run the smoke test and narrate the output —
 it walks the same pipeline and prints each stage:
 
 ```bash

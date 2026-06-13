@@ -35,14 +35,12 @@ Create a local `.env` from `.env.example` and fill in the values you use:
 
 - `APIFY_TOKEN`
 - `HF_TOKEN`
-- `LOVABLE_TOKEN`
 - `SIEMENS_LLM_API_KEY`
 - `SIEMENS_SDC_API_KEY`
 
 Optional endpoint env vars:
 
 - `HF_MCP_URL`
-- `LOVABLE_MCP_URL`
 - `N8N_MCP_URL`
 - `N8N_MCP_TOKEN`
 - `N8N_WEBHOOK_URL`
@@ -55,15 +53,19 @@ This workspace now includes OpenCode MCP config for:
 
 - Apify (`https://mcp.apify.com`)
 - Hugging Face (`{env:HF_MCP_URL}`)
-- Lovable (`{env:LOVABLE_MCP_URL}`)
 - n8n local MCP (`{env:N8N_MCP_URL}`)
 
 Auth is wired through:
 
 - `Authorization: Bearer {env:APIFY_TOKEN}`
 - `Authorization: Bearer {env:HF_TOKEN}`
-- `Authorization: Bearer {env:LOVABLE_TOKEN}`
 - `Authorization: Bearer {env:N8N_MCP_TOKEN}`
+
+Frontend generation is owned by the orchestrator directly — no external
+frontend-generation MCP is wired. The React dashboard source lives in
+`frontend/`; `npm run build` emits the bundle into
+`experiment-lab/app/static_react/`, which the FastAPI backend mounts at
+`/app/`.
 
 With `oauth: false` in `opencode.json`, OpenCode uses the token directly without interactive MCP OAuth prompts.
 
@@ -105,29 +107,25 @@ Do not guess or hardcode a made-up path.
 
 Detailed workflow contracts and local validation are in `docs/n8n-local-mcp.md`.
 
-## Lovable connection (Cloudflare tunnel)
+## Frontend (React dashboard)
 
-If `cloudflared` is not installed system-wide, install a user-local binary:
-
-```bash
-curl -L -o "$HOME/.local/bin/cloudflared" "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64"
-chmod +x "$HOME/.local/bin/cloudflared"
-cloudflared --version
-```
-
-Run OpenCode server with Lovable CORS origin:
+The React dashboard source lives in `frontend/` (Vite + React +
+Tailwind + recharts). Build it once before serving:
 
 ```bash
-opencode serve --port 4096 --hostname 127.0.0.1 --cors https://insight-buddy-702.lovable.app
+cd frontend && npm install && npm run build
 ```
 
-In another terminal, create a quick Cloudflare tunnel:
+`vite.config.ts` is configured to emit straight into
+`experiment-lab/app/static_react/` with `base: "/app/"`. The
+experiment-lab FastAPI backend mounts that directory at `/app/`, so
+once the backend is running you can open:
 
-```bash
-cloudflared tunnel --url http://127.0.0.1:4096
-```
+- `http://localhost:8000/app/` — full React dashboard
+- `http://localhost:8000/ui/`  — single-file "0 to 100" fallback
 
-Use the generated `https://...trycloudflare.com` URL in Lovable.
+When the dashboard needs to change, edit `frontend/src/` and rerun
+`npm run build`; no external frontend-generation MCP is in the loop.
 
 ## Experiment Lab Skill
 

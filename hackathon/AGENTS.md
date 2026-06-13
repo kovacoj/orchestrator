@@ -12,7 +12,7 @@ synthetic seed (fallback: cached Apify fixture, future: live Apify)
   → SQLite/Supabase competitor_prices
   → hackathon/api analysis (median, IQR outlier, recommendation, confidence)
   → recommendations table (approval-only)
-  → Lovable dashboard (live) + agent_logs timeline
+  → React dashboard (live) + agent_logs timeline
 ```
 
 Built as a **parallel subsystem**. The `experiment-lab/` submodule is **read-only**
@@ -122,5 +122,5 @@ hackathon/
 │   ├── workflow_1_scheduled_scrape_synthetic.json
 │   ├── workflow_1b_scheduled_scrape_apify.json
 │   └── workflow_4_approval.json
-└── lovable_prompt.md                  # narrowed Lovable build prompt
+└── frontend_handoff_prompt.md        # narrowed frontend build prompt
 ```

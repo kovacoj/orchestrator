@@ -1,7 +1,7 @@
-# Lovable build prompt — Agentic Decision Lab / MarketTwin
+# Frontend handoff prompt — Agentic Decision Lab / MarketTwin
 
-> Paste this into Lovable to generate the dashboard. Tuned for the three
-> demo-visible elements we locked in:
+> Build brief for the orchestrator-owned React frontend under `frontend/`.
+> Tuned for the three demo-visible elements we locked in:
 > 1. Live recommendation card (approve / reject)
 > 2. Real-time scrape feed
 > 3. Agent log timeline with model + role per step
@@ -97,20 +97,20 @@ context — these are agent-runtime config, not user-editable).
 
 Two equally-valid wiring options. Pick one:
 
-### Option A — Lovable talks to Supabase directly (preferred for live demo)
+### Option A — Frontend talks to Supabase directly (preferred for live demo)
 
 1. In Supabase, run `hackathon/schema.sql` then `hackathon/seed/seed.sql`
-   (Lovable's Supabase integration can do both via the SQL editor).
-2. The Lovable dashboard subscribes to:
+   (use the Supabase SQL editor).
+2. The React dashboard subscribes via `@supabase/supabase-js` realtime to:
    - `INSERT` / `UPDATE` on `recommendations` → refresh Column 1
    - `INSERT` / `UPDATE` on `scrape_runs` → refresh Column 2
    - `INSERT` on `agent_logs` → prepend to Column 3
 3. Decision/scrape actions hit the backend at
    `${VITE_MARKETWIN_API_URL}/recommendations/{id}/decision` and
    `${VITE_MARKETWIN_API_URL}/scrapes/run` respectively. The backend
-   handles the writes that Lovable then sees over realtime.
+   handles the writes that the frontend then sees over realtime.
 
-### Option B — Lovable talks only to the backend (simpler dev loop)
+### Option B — Frontend talks only to the backend (simpler dev loop)
 
 1. No Supabase needed; backend uses local SQLite.
 2. Dashboard polls `GET /dashboard` every 5 seconds; or, if you wire it,

@@ -100,7 +100,7 @@
   "tags": [{ "name": "hackathon" }],
   "meta": {
     "provenance": "Built by claude-opus-4-7 (substitute); subagent runtime targets gpt-5.3-codex / reasoning=medium",
-    "purpose": "Approval-only loop. Lovable dashboard POSTs to this webhook; the webhook proxies to the backend so dashboards can be entirely client-side and still leave an n8n audit trail.",
+    "purpose": "Approval-only loop. The React dashboard POSTs to this webhook; the webhook proxies to the backend so dashboards can be entirely client-side and still leave an n8n audit trail.",
     "scope": "hackathon subsystem only"
   }
 }

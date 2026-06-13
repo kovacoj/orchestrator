@@ -82,7 +82,7 @@ Files in `n8n/`, all tagged `hackathon`:
 
 Import via n8n UI → ⋯ → Import from File.
 
-## Supabase / Lovable wiring
+## Supabase / frontend wiring
 
 For the live dashboard demo:
 
@@ -90,8 +90,9 @@ For the live dashboard demo:
 2. (Optional) Apply `seed/seed.sql` if you want pre-loaded synthetic rows.
 3. Point the backend at Supabase: `export DATABASE_URL=postgresql://…` and
    install psycopg: `uv pip install -e ".[postgres]"`.
-4. Paste `lovable_prompt.md` into Lovable.
-5. In the Lovable build, set
+4. Use `frontend_handoff_prompt.md` as the build brief for the React frontend
+   under `frontend/` (orchestrator-owned generation; no external MCP).
+5. In the frontend build, set
    `VITE_MARKETWIN_API_URL=http://<host>:8001`.
 
 Without Supabase, everything still works against the local SQLite file at
@@ -126,7 +127,7 @@ hackathon/
 ├── scripts/
 │   ├── seed.py                                  # one-shot seed
 │   └── smoke_test.py                            # in-process E2E check
-└── lovable_prompt.md                            # paste into Lovable
+└── frontend_handoff_prompt.md                  # frontend build brief
 ```
 
 ## Safety boundaries
