@@ -1,47 +1,88 @@
-# Signal Foundry — Reputation Monitor Frontend
+# frontend/ — Signal Foundry Reputation Monitor Dashboard
 
-React + TypeScript + Vite + Tailwind + Recharts dashboard for the Prague
-coffee-chain reputation-monitor demo. Reference implementation of
-[`docs/reputation-dashboard-spec.md`](../docs/reputation-dashboard-spec.md).
+A React + TypeScript + Vite + Tailwind + Recharts dashboard for the Prague
+coffee-chain reputation-monitor demo. Local artificial data only — no live
+backend required.
 
-This is a self-contained subsystem. It ships with local artificial data
-(`src/data/demoData.ts`) and does **not** require any live backend.
+Spec: [`docs/reputation-dashboard-spec.md`](../docs/reputation-dashboard-spec.md).
 
-## Run
+## Quickstart
 
 ```bash
+cd frontend
 npm install
 npm run dev        # http://localhost:5173
-npm run build      # type-check + production build into dist/
-npm run typecheck  # type-check only
 ```
 
-## Layout
+For a production build:
 
-- `src/App.tsx` — router; 8 pages mounted under the spec routes.
-- `src/components/layout/` — `Sidebar`, `Topbar`, `PageShell`.
-- `src/components/dashboard/` — `KpiCard`, `AlertCard`, `ChartCard`,
-  `FindingCard`, `LabDecisionCard`.
-- `src/pages/` — one file per route (`Overview`, `Alerts`, `Locations`,
-  `Predictions`, `Competitors`, `Labs`, `Reports`, `DataQuality`).
-- `src/data/demoData.ts` — single source of artificial demo data; edit here
-  to change the demo story.
-- `src/utils/formatters.ts` — number/currency/risk-color helpers.
+```bash
+npm run build      # output in dist/
+npm run preview    # serves dist/ on http://localhost:4173
+```
 
-## Demo story
+## Pages
 
-A 10-location Prague coffee chain. Vinohrady (LOC_001) has a 23% sentiment
-drop driven by slow service during the 8–9 AM peak; staffing was below
-normal; a nearby competitor promotion is secondary context. The dashboard
-recommends adding one morning-shift staff member for three days. See the
-spec for the full narrative and acceptance criteria.
+| Route            | Purpose                                                      |
+|------------------|--------------------------------------------------------------|
+| `/dashboard`     | Overview — KPIs, main alert, revenue & sentiment trend       |
+| `/alerts`        | Active warning with evidence, findings, signal timeline      |
+| `/locations`     | All 10 Prague locations, sentiment heatmap, complaint chart  |
+| `/predictions`   | No-action vs extra-staff forecasts (sentiment / queue / wait)|
+| `/competitors`   | Competitor moves and price index (treated as secondary)      |
+| `/labs`          | Selected vs suppressed research labs                         |
+| `/reports`       | Five business-readable report tabs                           |
+| `/data-quality`  | Provenance, dataset summary, safety rules                    |
 
-## Relationship to other subsystems
+## Architecture
 
-- `experiment-lab/app/static/index.html` — single-file dashboard served by
-  the FastAPI slice at `/ui`. Same information architecture, served from
-  the backend.
-- `lovable.md` (repo root) — paste-ready Lovable prompt to regenerate this
-  dashboard as a polished `0 to 100` product app from the backend bundle.
-- `frontend/` (this dir) — in-repo TypeScript reference implementation that
-  runs without a backend.
+```
+src/
+  data/demoData.ts            All artificial data lives here. Edit to change the demo story.
+  components/
+    layout/{Sidebar,Topbar,PageShell}.tsx
+    dashboard/{KpiCard,AlertCard,ChartCard,FindingCard,LabDecisionCard}.tsx
+  pages/                       One file per route.
+  utils/formatters.ts
+  App.tsx                      Router + shell.
+  main.tsx                     Entry point.
+  index.css                    Tailwind directives + small component classes.
+```
+
+There is no API client and no router data-loader. Every page imports its
+demo data directly from `src/data/demoData.ts`. To change the demo numbers
+(e.g. swap Vinohrady's sentiment drop), edit that one file.
+
+## Demo story (locked)
+
+- Main alert: **Vinohrady sentiment dropped 23%**.
+- Likely cause: slow service during the 8–9 AM morning peak.
+- Recommended action: **add one morning-shift staff member for three days** and monitor recovery.
+- Competitor A promotion is shown but treated as **secondary context**.
+- Individual staff attribution is **suppressed** (Staff/Shift Mention lab is hidden).
+- Every chart includes a one-sentence interpretation. Every finding includes evidence + confidence.
+
+## Acceptance checklist (from the spec)
+
+- [x] Demo-ready visually.
+- [x] Main alert is Vinohrady -23%.
+- [x] Recommended action is one morning staff member for 3 days.
+- [x] Competitor promo is secondary, not main cause.
+- [x] Staff attribution is suppressed (Lab 5 hidden, no per-employee blame).
+- [x] Every chart has an interpretation line below it.
+- [x] Every prediction includes drivers + uncertainty + confidence.
+- [x] Every finding includes evidence + severity + confidence.
+- [x] Artificial-data disclaimer visible (Topbar badge + Data Quality page).
+- [x] Works with no live API or DB (`npm run dev` is enough).
+
+## Hooking up a real backend later
+
+The eventual backend contract lives in `../README.md` §11. When ready, swap
+the imports in `pages/*.tsx` from `../data/demoData` to a small API client
+that hits:
+
+- `GET /sessions/{id}/dashboard` → KPIs + chart specs
+- `GET /sessions/{id}/charts/{chart_id}/data` → chart payload
+- `GET /sessions/{id}/alerts` → alert objects
+
+The component contracts will not need to change.
