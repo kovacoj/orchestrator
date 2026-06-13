@@ -1,0 +1,617 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+
+  // ════════════════════════════════════════════════════════════════
+  //  DEFAULT MODEL
+  // ════════════════════════════════════════════════════════════════
+  "model": "siemens-sdc-openai-responses/gpt-5.3-codex",
+  "small_model": "siemens/ministral-3-14b-instruct-2512",
+
+  "agent": {
+    "general": {
+      "model": "siemens-sdc-openai-responses/gpt-5.3-codex",
+      "options": {
+        "reasoningEffort": "medium"
+      }
+    },
+    "explore": {
+      "model": "siemens-sdc-openai-responses/gpt-5.3-codex",
+      "options": {
+        "reasoningEffort": "medium"
+      }
+    },
+    "experiment-runner": {
+      "mode": "subagent",
+      "description": "Runs experiment-lab scenarios via the stable local CLI wrapper.",
+      "model": "siemens-sdc-openai-responses/gpt-5.3-codex",
+      "options": {
+        "reasoningEffort": "medium"
+      },
+      "prompt": "Use experiment-lab deterministic CLI only: uv run python -m app.agent_skills.experiment_lab_cli ... . Do not import random internals."
+    },
+    "refresh-compare-runner": {
+      "mode": "subagent",
+      "description": "Runs refresh-compare analysis and reports prediction drift.",
+      "model": "siemens-sdc-openai-responses/gpt-5.3-codex",
+      "options": {
+        "reasoningEffort": "medium"
+      },
+      "prompt": "Run refresh-compare with experiment-lab CLI and return structured differences only."
+    },
+    "decision-card-runner": {
+      "mode": "subagent",
+      "description": "Builds and validates decision-card outputs from lab reports.",
+      "model": "siemens-sdc-openai-responses/gpt-5.3-codex",
+      "options": {
+        "reasoningEffort": "medium"
+      },
+      "prompt": "Use lab report outputs and decision card payloads from experiment-lab CLI. Keep behavior deterministic."
+    },
+    "text-engine-runner": {
+      "mode": "subagent",
+      "description": "Validates text-engine processing for experiment-lab scenarios.",
+      "model": "siemens-sdc-openai-responses/gpt-5.3-codex",
+      "options": {
+        "reasoningEffort": "medium"
+      },
+      "prompt": "Use local deterministic text-engine and lab fixtures only; no external API calls."
+    }
+  },
+
+  "provider": {
+    "siemens": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "code.siemens.com",
+      "options": {
+        "apiKey": "{env:SIEMENS_LLM_API_KEY}",
+        "baseURL": "https://api.siemens.com/llm/v1"
+      },
+      "models": {
+        // ── GA Models ──────────────────────────────────────────
+        "glm-5": {
+          "name": "GLM-5 (Agentic)",
+          "attachment": true,
+          "reasoning": true,
+          "limit": {
+            "context": 202752,
+            "output": 202752
+          }
+        },
+        "qwen-3.6-27b": {
+          "name": "Qwen 3.6 27B (Reasoning + Vision)",
+          "attachment": true,
+          "reasoning": true,
+          "limit": {
+            "context": 262144,
+            "output": 262144
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "ministral-3-14b-instruct-2512": {
+          "name": "Ministral 14B (Fast + Vision)",
+          "attachment": true,
+          "reasoning": false,
+          "limit": {
+            "context": 256000,
+            "output": 256000
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "qwen3-embedding-8b": {
+          "name": "Qwen3 Embedding 8B",
+          "attachment": false,
+          "reasoning": false,
+          "limit": {
+            "context": 32768,
+            "output": 32768
+          }
+        },
+        "qwen3-reranker-0.6b": {
+          "name": "Qwen3 Reranker 0.6B",
+          "attachment": false,
+          "reasoning": false,
+          "limit": {
+            "context": 32768,
+            "output": 32768
+          }
+        },
+
+        // ── PREVIEW: May be removed by Siemens at any time ─────
+        "deepseek-v4-flash": {
+          "name": "DeepSeek V4 Flash (1M ctx · Heavy Reasoning)",
+          "attachment": false,
+          "reasoning": true,
+          "limit": {
+            "context": 1048576,
+            "output": 1048576
+          }
+        }
+      }
+    },
+
+    // ════════════════════════════════════════════════════════════════
+    //  LOCAL SIEMENS FORWARDER
+    //  Endpoint: http://localhost:5679/v1
+    // ════════════════════════════════════════════════════════════════
+    "siemens-forwarder": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Local Siemens Forwarder",
+      "options": {
+        "apiKey": "{env:N8N_FORWARDER_API_KEY}",
+        "baseURL": "http://localhost:5679/v1"
+      },
+      "models": {
+        "devstral-small-2-24b-instruct-2512": {
+          "name": "Devstral via Siemens Forwarder",
+          "attachment": true,
+          "reasoning": false,
+          "limit": {
+            "context": 256000,
+            "output": 256000
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "glm-5": {
+          "name": "GLM-5 via Siemens Forwarder",
+          "attachment": true,
+          "reasoning": true,
+          "limit": {
+            "context": 202752,
+            "output": 202752
+          }
+        },
+        "qwen-3.6-27b": {
+          "name": "Qwen 3.6 27B via Siemens Forwarder",
+          "attachment": true,
+          "reasoning": true,
+          "limit": {
+            "context": 262144,
+            "output": 262144
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        }
+      }
+    },
+
+    // ════════════════════════════════════════════════════════════════
+    //  SDC LLM GATEWAY — OPENAI CHAT COMPLETIONS
+    //  Endpoint: /v1/chat/completions
+    //
+    //  reasoning=false is intentional here to avoid OpenCode sending
+    //  reasoningSummary to Siemens SDC's chat-completions endpoint.
+    // ════════════════════════════════════════════════════════════════
+    "siemens-sdc-openai-chat": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Siemens SDC LLM Gateway - OpenAI Chat",
+      "options": {
+        "baseURL": "https://llm.sdc.siemens.cloud/v1",
+        "apiKey": "{env:SIEMENS_SDC_API_KEY}",
+        "headers": {
+          "x-api-key": "{env:SIEMENS_SDC_API_KEY}",
+          "SIEMENS_SDC_API_KEY": "{env:SIEMENS_SDC_API_KEY}"
+        }
+      },
+      "models": {
+        "gpt-5": {
+          "name": "GPT-5 via SDC Chat",
+          "attachment": true,
+          "reasoning": false,
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          }
+        },
+        "gpt-5-nano": {
+          "name": "GPT-5 Nano via SDC Chat",
+          "attachment": true,
+          "reasoning": false,
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          }
+        },
+        "gpt-5-mini": {
+          "name": "GPT-5 Mini via SDC Chat",
+          "attachment": true,
+          "reasoning": false,
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          }
+        },
+        "gpt-5.1": {
+          "name": "GPT-5.1 via SDC Chat",
+          "attachment": true,
+          "reasoning": false,
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          }
+        },
+        "gpt-5.2": {
+          "name": "GPT-5.2 via SDC Chat",
+          "attachment": true,
+          "reasoning": false,
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          }
+        },
+        "gpt-5.4": {
+          "name": "GPT-5.4 via SDC Chat",
+          "attachment": true,
+          "reasoning": false,
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          }
+        },
+        "gpt-5.4-pro": {
+          "name": "GPT-5.4 Pro via SDC Chat",
+          "attachment": true,
+          "reasoning": false,
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          }
+        },
+        "gpt-5.5": {
+          "name": "GPT-5.5 via SDC Chat",
+          "attachment": true,
+          "reasoning": false,
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          }
+        }
+      }
+    },
+
+    // ════════════════════════════════════════════════════════════════
+    //  SDC LLM GATEWAY — OPENAI RESPONSES / CODEX
+    //  Endpoint: /v1/responses
+    // ════════════════════════════════════════════════════════════════
+    "siemens-sdc-openai-responses": {
+      "npm": "@ai-sdk/openai",
+      "name": "Siemens SDC LLM Gateway - OpenAI Responses / Codex",
+      "options": {
+        "baseURL": "https://llm.sdc.siemens.cloud/v1",
+        "apiKey": "{env:SIEMENS_SDC_API_KEY}",
+        "headers": {
+          "x-api-key": "{env:SIEMENS_SDC_API_KEY}",
+          "SIEMENS_SDC_API_KEY": "{env:SIEMENS_SDC_API_KEY}"
+        }
+      },
+      "models": {
+        "gpt-5": {
+          "name": "GPT-5 via SDC Responses",
+          "attachment": true,
+          "reasoning": true,
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          }
+        },
+        "gpt-5-nano": {
+          "name": "GPT-5 Nano via SDC Responses",
+          "attachment": true,
+          "reasoning": true,
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          }
+        },
+        "gpt-5-mini": {
+          "name": "GPT-5 Mini via SDC Responses",
+          "attachment": true,
+          "reasoning": true,
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          }
+        },
+        "gpt-5.1-codex-max": {
+          "name": "GPT-5.1 Codex Max via SDC",
+          "attachment": true,
+          "reasoning": true,
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          }
+        },
+        "gpt-5.1-codex-mini": {
+          "name": "GPT-5.1 Codex Mini via SDC",
+          "attachment": true,
+          "reasoning": true,
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          }
+        },
+        "gpt-5.1-codex": {
+          "name": "GPT-5.1 Codex via SDC",
+          "attachment": true,
+          "reasoning": true,
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          }
+        },
+        "gpt-5.2-codex": {
+          "name": "GPT-5.2 Codex via SDC",
+          "attachment": true,
+          "reasoning": true,
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          }
+        },
+        "gpt-5.3-codex": {
+          "name": "GPT-5.3 Codex via SDC",
+          "attachment": true,
+          "reasoning": true,
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          }
+        },
+        "gpt-5.4": {
+          "name": "GPT-5.4 via SDC Responses",
+          "attachment": true,
+          "reasoning": true,
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          }
+        },
+        "gpt-5.4-pro": {
+          "name": "GPT-5.4 Pro via SDC Responses",
+          "attachment": true,
+          "reasoning": true,
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          }
+        },
+        "gpt-5.5": {
+          "name": "GPT-5.5 via SDC Responses",
+          "attachment": true,
+          "reasoning": true,
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          }
+        }
+      }
+    },
+
+    // ════════════════════════════════════════════════════════════════
+    //  SDC LLM GATEWAY — GEMINI
+    //  Endpoint: /v1beta
+    // ════════════════════════════════════════════════════════════════
+    "siemens-sdc-gemini": {
+      "npm": "@ai-sdk/google",
+      "name": "Siemens SDC LLM Gateway - Gemini",
+      "options": {
+        "baseURL": "https://llm.sdc.siemens.cloud/v1beta",
+        "apiKey": "{env:SIEMENS_SDC_API_KEY}",
+        "headers": {
+          "x-api-key": "{env:SIEMENS_SDC_API_KEY}",
+          "SIEMENS_SDC_API_KEY": "{env:SIEMENS_SDC_API_KEY}"
+        }
+      },
+      "models": {
+        "google/gemini-3.1-pro-preview": {
+          "name": "Gemini 3.1 Pro Preview via SDC",
+          "attachment": true,
+          "reasoning": true,
+          "limit": {
+            "context": 1000000,
+            "output": 64000
+          }
+        },
+        "google/gemini-3.1-flash-lite-preview": {
+          "name": "Gemini 3.1 Flash Lite Preview via SDC",
+          "attachment": true,
+          "reasoning": true,
+          "limit": {
+            "context": 1000000,
+            "output": 64000
+          }
+        },
+        "google/gemini-3-pro-preview": {
+          "name": "Gemini 3 Pro Preview via SDC",
+          "attachment": true,
+          "reasoning": true,
+          "limit": {
+            "context": 1000000,
+            "output": 64000
+          }
+        },
+        "google/gemini-3-flash-preview": {
+          "name": "Gemini 3 Flash Preview via SDC",
+          "attachment": true,
+          "reasoning": true,
+          "limit": {
+            "context": 1000000,
+            "output": 64000
+          }
+        },
+        "google/gemini-2.5-flash": {
+          "name": "Gemini 2.5 Flash via SDC",
+          "attachment": true,
+          "reasoning": true,
+          "limit": {
+            "context": 1000000,
+            "output": 64000
+          }
+        },
+        "google/gemini-2.5-flash-lite": {
+          "name": "Gemini 2.5 Flash Lite via SDC",
+          "attachment": true,
+          "reasoning": true,
+          "limit": {
+            "context": 1000000,
+            "output": 64000
+          }
+        },
+        "google/gemini-2.5-pro": {
+          "name": "Gemini 2.5 Pro via SDC",
+          "attachment": true,
+          "reasoning": true,
+          "limit": {
+            "context": 1000000,
+            "output": 64000
+          }
+        }
+      }
+    }
+  },
+
+  // ════════════════════════════════════════════════════════════════
+  //  MCP SERVERS
+  // ════════════════════════════════════════════════════════════════
+  "mcp": {
+    "apify": {
+      "type": "remote",
+      "url": "https://mcp.apify.com",
+      "headers": {
+        "Authorization": "Bearer {env:APIFY_TOKEN}"
+      },
+      "oauth": false,
+      "enabled": true
+    },
+    "signal-foundry-huggingface": {
+      "type": "remote",
+      "url": "{env:HF_MCP_URL}",
+      "headers": {
+        "Authorization": "Bearer {env:HF_TOKEN}"
+      },
+      "oauth": false,
+      "enabled": true
+    },
+    "lovable": {
+      "type": "remote",
+      "url": "{env:LOVABLE_MCP_URL}",
+      "headers": {
+        "Authorization": "Bearer {env:LOVABLE_TOKEN}"
+      },
+      "oauth": false,
+      "enabled": true
+    },
+    "n8n": {
+      "type": "remote",
+      "url": "{env:N8N_MCP_URL}",
+      "oauth": false,
+      "enabled": false
+    }
+  },
+
+  "share": "disabled",
+
+  "disabled_providers": [
+    "opencode",
+    // "openai"
+  ],
+
+  "permission": {
+    "bash": {
+      "rm -rf *": "deny",
+      "rm -r /*": "deny",
+      "sudo *": "deny",
+      "git push *": "deny",
+      "git push --force *": "deny",
+      "ssh *": "deny",
+      "scp *": "deny",
+      "rsync *": "deny",
+      "curl *": "deny",
+      "wget *": "deny",
+      "nc *": "deny",
+      "ncat *": "deny",
+      "pip install *": "deny",
+      "pip3 install *": "deny",
+      "npm install *": "deny",
+      "npm i *": "deny",
+      "chmod 777 *": "deny",
+      "chmod +x *": "deny",
+      "chown *": "deny",
+      "dd *": "deny",
+      "mkfs*": "deny",
+      "shutdown *": "deny",
+      "reboot *": "deny",
+      "poweroff *": "deny",
+      "npm run lint": "allow",
+      "npm run test *": "allow",
+      "uv run *": "allow",
+      "poetry run *": "allow",
+      "git status": "allow",
+      "git log *": "allow",
+      "git diff *": "allow",
+      "git add *": "allow",
+      "git commit *": "allow",
+      "git stash *": "allow",
+      "*": "ask"
+    },
+    "read": {
+      ".env": "deny",
+      ".env.*": "deny",
+      "**/.env": "deny",
+      "**/.env.*": "deny",
+      "secrets/**": "deny",
+      "**/secrets/**": "deny",
+      "config/credentials.json": "deny",
+      "**/credentials.json": "deny",
+      "**/*.pem": "deny",
+      "**/*.key": "deny",
+      "**/*.p12": "deny",
+      "**/*.pfx": "deny",
+      "~/.ssh/**": "deny",
+      "~/.gnupg/**": "deny",
+      "~/.zshrc": "allow",
+      "*": "allow"
+    },
+    "edit": "ask",
+    "write": "ask",
+    "webfetch": "ask",
+    "websearch": "ask"
+  },
+
+  "plugin": [
+    "./plugins/copilot-auth.mjs",
+    "./plugins/siemens-guards.js",
+    "./plugins/env-protection.js",
+    "./plugins/my-guards.ts"
+  ]
+}
