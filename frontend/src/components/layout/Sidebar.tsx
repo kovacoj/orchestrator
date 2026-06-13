@@ -26,12 +26,12 @@ export function Sidebar() {
     <aside className="hidden md:flex md:w-60 lg:w-64 flex-col border-r border-slate-200 bg-white">
       <div className="px-5 py-5 border-b border-slate-200">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-md bg-gradient-to-br from-brand-600 to-indigo-600 flex items-center justify-center text-white font-bold">
-            SF
+          <div className="w-8 h-8 rounded-md bg-gradient-to-br from-brand-600 to-indigo-600 flex items-center justify-center text-white font-bold text-[10px]">
+            0/100
           </div>
           <div>
             <div className="text-sm font-semibold leading-tight">
-              Signal Foundry
+              0 to 100
             </div>
             <div className="text-[11px] text-slate-500 leading-tight">
               Reputation Monitor

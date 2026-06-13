@@ -1,4 +1,4 @@
-// Signal Foundry — artificial demo dataset
+// 0 to 100 — artificial demo dataset
 // All numbers chosen to match docs/reputation-dashboard-spec.md.
 // No live API or DB. Edit here to change the demo story.
 
@@ -511,7 +511,7 @@ export const findings: Finding[] = [
     whatWasFound:
       "There is insufficient evidence to attribute the issue to individual staff members.",
     important:
-      "Signal Foundry does not make individual staff blame recommendations from sparse public-review data.",
+      "0 to 100 does not make individual staff blame recommendations from sparse public-review data.",
   },
 ];
 
