@@ -86,13 +86,16 @@ n8n is the workflow runner for Signal Foundry. It is not the intelligence layer.
 The orchestrator may call n8n only through approved local MCP tools:
 
 - `sf_refresh_session`
+- `sf_get_session_state`
 - `sf_get_session_alerts`
 - `sf_trigger_demo_monitor`
 
 n8n workflows may call the Signal Foundry backend:
 
 - `POST /sessions/{session_id}/refresh`
+- `GET /sessions/{session_id}/cards`
 - `GET /sessions/{session_id}/alerts`
+- `POST /sessions/{session_id}/alerts`
 
 Do not expose full workflow administration over MCP.
 
