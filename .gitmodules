@@ -1,0 +1,3 @@
+[submodule "experiment-lab"]
+	path = experiment-lab
+	url = git@github.com:kovacoj/experiment-lab.git
