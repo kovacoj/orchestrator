@@ -98,6 +98,8 @@ n8n workflows may call the Signal Foundry backend:
 - `GET  /sessions/{session_id}/monitoring-plan`
 - `GET  /sessions/{session_id}/dashboard`
 - `GET  /sessions/{session_id}/charts/{chart_id}/data`
+- `POST /sessions/{session_id}/bundle/rebuild`
+- `GET  /sessions/{session_id}/forecasts/sales?horizon_days=N` (clamped 7..90, default 30)
 - `GET  /sessions/{session_id}/cards` *(not yet implemented in slice)*
 - `GET  /sessions/{session_id}/alerts` *(not yet implemented in slice)*
 - `POST /sessions/{session_id}/alerts` *(not yet implemented in slice)*
@@ -136,9 +138,16 @@ Run it with:
 cd experiment-lab && uv run uvicorn app.api.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
+The static "0 to 100" dashboard is served at `http://localhost:8000/`
+(redirects to `/ui/`); the JSON frontend bundle is served at
+`/bundle/*` after a `POST /sessions/{session_id}/bundle/rebuild`.
+
 The current slice only wires session `demo_miners` (scenario
 `reputation_monitor`) and chart `sentiment_trend_by_location`. Other
 sessions, charts, alerts, anomaly detection, and decision-card generation
-are intentionally out of scope. On-disk state lives under
-`experiment-lab/tmp/sessions/`; override the base directory via
+are intentionally out of scope. The sales-forecast endpoint
+(`/sessions/{id}/forecasts/sales`) returns a deterministic synthetic
+projection driven by the lab context (sentiment drop drags Vinohrady
+revenue; intervention closes the gap over 5 days). On-disk state lives
+under `experiment-lab/tmp/sessions/`; override the base directory via
 `EXPERIMENT_LAB_API_TMP_DIR` (the test suite uses this for isolation).
