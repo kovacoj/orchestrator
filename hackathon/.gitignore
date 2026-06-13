@@ -1,0 +1,19 @@
+# local Python venv + caches
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# local-only state (SQLite DB, scrape logs, etc.)
+.data/
+tmp/
+
+# build artifacts
+*.egg-info/
+build/
+dist/
+
+# env files (never commit secrets)
+.env
+.env.*
+!.env.example

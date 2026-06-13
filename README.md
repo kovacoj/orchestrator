@@ -18,6 +18,34 @@ The project is built around this core principle:
 
 ---
 
+## 0. Subsystems
+
+This repo currently contains two parallel subsystems:
+
+| Path              | Purpose                                                                                          | Status                  |
+|-------------------|--------------------------------------------------------------------------------------------------|-------------------------|
+| `experiment-lab/` | Deterministic research-lab engine for the long-form Signal Foundry product (read-only submodule) | Under active build      |
+| `hackathon/`      | Self-contained **MarketTwin / Agentic Decision Lab** demo (Apify → n8n → SQLite/Supabase → analysis → Lovable) | Runnable end-to-end |
+
+The hackathon subsystem is independent — it has its own FastAPI app, its
+own schema, its own n8n workflows, and its own demo script. It does **not**
+import from `experiment-lab/`.
+
+Quick path to the demo:
+
+```bash
+cd hackathon
+uv venv && uv pip install -e ".[test]"
+make seed       # populates local SQLite with 1 scrape + 5 recommendations
+make smoke      # in-process end-to-end check
+make api        # FastAPI on :8001 — open /docs
+```
+
+See `hackathon/README.md` for endpoints, n8n wiring, Supabase setup, and
+`hackathon/DEMO.md` for the 3-minute walkthrough script.
+
+---
+
 ## 1. High-Level Architecture
 
 ```text

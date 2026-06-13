@@ -1,0 +1,204 @@
+[
+  {
+    "title": "Bosch GBM 320 corded drill, 320 W",
+    "brand": "Bosch",
+    "product": "GBM 320 corded drill",
+    "competitor": "alza.cz",
+    "price": 1290,
+    "currency": "CZK",
+    "availability": "in_stock",
+    "url": "https://www.alza.cz/bosch-gbm-320-d8211060.htm",
+    "scrapedAt": "2026-06-13T10:14:02Z"
+  },
+  {
+    "title": "Bosch GBM 320 vrtačka 320W",
+    "brand": "Bosch",
+    "product": "GBM 320 corded drill",
+    "competitor": "mall.cz",
+    "price": 1349,
+    "currency": "CZK",
+    "availability": "in_stock",
+    "url": "https://www.mall.cz/vrtacky/bosch-gbm-320",
+    "scrapedAt": "2026-06-13T10:14:08Z"
+  },
+  {
+    "title": "Bosch GBM 320 drill 320W (refurb)",
+    "brand": "Bosch",
+    "product": "GBM 320 corded drill",
+    "competitor": "datart.cz",
+    "price": 1199,
+    "currency": "CZK",
+    "availability": "in_stock",
+    "url": "https://www.datart.cz/bosch-gbm-320.html",
+    "scrapedAt": "2026-06-13T10:14:14Z"
+  },
+  {
+    "title": "Bosch GBM 320 elektrická vrtačka",
+    "brand": "Bosch",
+    "product": "GBM 320 corded drill",
+    "competitor": "kasahuje.cz",
+    "price": 1450,
+    "currency": "CZK",
+    "availability": "out_of_stock",
+    "url": "https://www.kasahuje.cz/bosch-gbm-320",
+    "scrapedAt": "2026-06-13T10:14:21Z"
+  },
+
+  {
+    "title": "Makita HP457D cordless drill 18V",
+    "brand": "Makita",
+    "product": "HP457D 18V cordless drill",
+    "competitor": "alza.cz",
+    "price": 2890,
+    "currency": "CZK",
+    "availability": "in_stock",
+    "url": "https://www.alza.cz/makita-hp457d-d3941821.htm",
+    "scrapedAt": "2026-06-13T10:14:28Z"
+  },
+  {
+    "title": "Makita HP457D 18V aku vrtačka",
+    "brand": "Makita",
+    "product": "HP457D 18V cordless drill",
+    "competitor": "mall.cz",
+    "price": 2999,
+    "currency": "CZK",
+    "availability": "in_stock",
+    "url": "https://www.mall.cz/aku-vrtacky/makita-hp457d",
+    "scrapedAt": "2026-06-13T10:14:35Z"
+  },
+  {
+    "title": "Makita HP457D 18V",
+    "brand": "Makita",
+    "product": "HP457D 18V cordless drill",
+    "competitor": "datart.cz",
+    "price": 2750,
+    "currency": "CZK",
+    "availability": "in_stock",
+    "url": "https://www.datart.cz/makita-hp457d.html",
+    "scrapedAt": "2026-06-13T10:14:41Z"
+  },
+
+  {
+    "title": "DeWalt DCD777S2T 18V XR brushless drill kit",
+    "brand": "DeWalt",
+    "product": "DCD777S2T 18V XR drill kit",
+    "competitor": "alza.cz",
+    "price": 4290,
+    "currency": "CZK",
+    "availability": "in_stock",
+    "url": "https://www.alza.cz/dewalt-dcd777s2t-d6213114.htm",
+    "scrapedAt": "2026-06-13T10:14:48Z"
+  },
+  {
+    "title": "DeWalt DCD777S2T sada vrtačka 18V",
+    "brand": "DeWalt",
+    "product": "DCD777S2T 18V XR drill kit",
+    "competitor": "mall.cz",
+    "price": 4499,
+    "currency": "CZK",
+    "availability": "in_stock",
+    "url": "https://www.mall.cz/aku-vrtacky/dewalt-dcd777s2t",
+    "scrapedAt": "2026-06-13T10:14:55Z"
+  },
+  {
+    "title": "DeWalt DCD777S2T 18V XR Set",
+    "brand": "DeWalt",
+    "product": "DCD777S2T 18V XR drill kit",
+    "competitor": "datart.cz",
+    "price": 4150,
+    "currency": "CZK",
+    "availability": "in_stock",
+    "url": "https://www.datart.cz/dewalt-dcd777s2t.html",
+    "scrapedAt": "2026-06-13T10:15:02Z"
+  },
+  {
+    "title": "DeWalt DCD777S2T brushless",
+    "brand": "DeWalt",
+    "product": "DCD777S2T 18V XR drill kit",
+    "competitor": "kasahuje.cz",
+    "price": 4699,
+    "currency": "CZK",
+    "availability": "in_stock",
+    "url": "https://www.kasahuje.cz/dewalt-dcd777s2t",
+    "scrapedAt": "2026-06-13T10:15:09Z"
+  },
+
+  {
+    "title": "Stanley FatMax STA0-30-606 tape measure 8m",
+    "brand": "Stanley",
+    "product": "FatMax 8m tape measure",
+    "competitor": "alza.cz",
+    "price": 459,
+    "currency": "CZK",
+    "availability": "in_stock",
+    "url": "https://www.alza.cz/stanley-fatmax-8m.htm",
+    "scrapedAt": "2026-06-13T10:15:16Z"
+  },
+  {
+    "title": "Stanley FatMax 8m svinovací metr",
+    "brand": "Stanley",
+    "product": "FatMax 8m tape measure",
+    "competitor": "mall.cz",
+    "price": 489,
+    "currency": "CZK",
+    "availability": "in_stock",
+    "url": "https://www.mall.cz/mericky/stanley-fatmax-8m",
+    "scrapedAt": "2026-06-13T10:15:22Z"
+  },
+  {
+    "title": "Stanley FatMax 8m",
+    "brand": "Stanley",
+    "product": "FatMax 8m tape measure",
+    "competitor": "datart.cz",
+    "price": 429,
+    "currency": "CZK",
+    "availability": "in_stock",
+    "url": "https://www.datart.cz/stanley-fatmax-8m.html",
+    "scrapedAt": "2026-06-13T10:15:29Z"
+  },
+  {
+    "title": "Stanley FatMax 8m premium tape",
+    "brand": "Stanley",
+    "product": "FatMax 8m tape measure",
+    "competitor": "kasahuje.cz",
+    "price": null,
+    "currency": null,
+    "availability": "unknown",
+    "url": "https://www.kasahuje.cz/stanley-fatmax-8m",
+    "scrapedAt": "2026-06-13T10:15:36Z"
+  },
+
+  {
+    "title": "Knipex 03 02 180 combination pliers 180mm",
+    "brand": "Knipex",
+    "product": "Knipex 180mm combination pliers",
+    "competitor": "alza.cz",
+    "price": 689,
+    "currency": "CZK",
+    "availability": "in_stock",
+    "url": "https://www.alza.cz/knipex-180mm.htm",
+    "scrapedAt": "2026-06-13T10:15:43Z"
+  },
+  {
+    "title": "Knipex 180mm kombinované kleště",
+    "brand": "Knipex",
+    "product": "Knipex 180mm combination pliers",
+    "competitor": "mall.cz",
+    "price": 719,
+    "currency": "CZK",
+    "availability": "in_stock",
+    "url": "https://www.mall.cz/kleste/knipex-180mm",
+    "scrapedAt": "2026-06-13T10:15:50Z"
+  },
+  {
+    "title": "Knipex 180 mm",
+    "brand": "Knipex",
+    "product": "Knipex 180mm combination pliers",
+    "competitor": "datart.cz",
+    "price": 649,
+    "currency": "CZK",
+    "availability": "in_stock",
+    "url": "https://www.datart.cz/knipex-180mm.html",
+    "scrapedAt": "2026-06-13T10:15:57Z"
+  }
+]

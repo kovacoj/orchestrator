@@ -1,0 +1,106 @@
+{
+  "name": "hackathon · Workflow 4 · Approval webhook",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "hackathon/decide",
+        "options": {}
+      },
+      "id": "11111111-cccc-4ccc-cccc-111111111111",
+      "name": "Webhook (POST /hackathon/decide)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "hackathon-decide"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "conditions": [
+            {
+              "id": "has-id",
+              "leftValue": "={{$json.body?.recommendation_id || ''}}",
+              "rightValue": "",
+              "operator": { "type": "string", "operation": "notEquals" }
+            },
+            {
+              "id": "valid-action",
+              "leftValue": "={{$json.body?.action || ''}}",
+              "rightValue": "approve,reject,needs_review",
+              "operator": { "type": "string", "operation": "contains" }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "22222222-cccc-4ccc-cccc-222222222222",
+      "name": "Validate payload",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.MARKETWIN_API_URL || 'http://host.docker.internal:8001'}}/recommendations/{{$json.body.recommendation_id}}/decision",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={ \"action\": \"{{$json.body.action}}\", \"decided_by\": \"{{$json.body.decided_by || 'n8n-webhook'}}\", \"feedback\": \"{{$json.body.feedback || ''}}\" }",
+        "options": { "timeout": 15000 }
+      },
+      "id": "33333333-cccc-4ccc-cccc-333333333333",
+      "name": "POST /recommendations/{id}/decision",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [720, 220]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"ok\": true, \"recommendation\": $json }",
+        "options": {}
+      },
+      "id": "44444444-cccc-4ccc-cccc-444444444444",
+      "name": "Respond OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [960, 220]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"ok\": false, \"error\": \"missing recommendation_id or invalid action (approve|reject|needs_review)\" }",
+        "options": { "responseCode": 400 }
+      },
+      "id": "55555555-cccc-4ccc-cccc-555555555555",
+      "name": "Respond 400",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [720, 400]
+    }
+  ],
+  "connections": {
+    "Webhook (POST /hackathon/decide)": {
+      "main": [[{ "node": "Validate payload", "type": "main", "index": 0 }]]
+    },
+    "Validate payload": {
+      "main": [
+        [{ "node": "POST /recommendations/{id}/decision", "type": "main", "index": 0 }],
+        [{ "node": "Respond 400", "type": "main", "index": 0 }]
+      ]
+    },
+    "POST /recommendations/{id}/decision": {
+      "main": [[{ "node": "Respond OK", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "tags": [{ "name": "hackathon" }],
+  "meta": {
+    "provenance": "Built by claude-opus-4-7 (substitute); subagent runtime targets gpt-5.3-codex / reasoning=medium",
+    "purpose": "Approval-only loop. Lovable dashboard POSTs to this webhook; the webhook proxies to the backend so dashboards can be entirely client-side and still leave an n8n audit trail.",
+    "scope": "hackathon subsystem only"
+  }
+}

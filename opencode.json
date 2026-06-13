@@ -14,29 +14,93 @@
     "explore": {
       "model": "siemens-sdc/claude-opus-4-7@default"
     },
+
+    // ────────────────────────────────────────────────────────────────
+    //  EXISTING LAB SUBAGENTS
+    //  Repointed to gpt-5.3-codex with reasoningEffort=medium per
+    //  hackathon spec: "All subagents must use model sdc gpt5.3 code".
+    // ────────────────────────────────────────────────────────────────
     "experiment-runner": {
       "mode": "subagent",
       "description": "Runs experiment-lab scenarios via the stable local CLI wrapper.",
-      "model": "siemens-sdc/claude-opus-4-7@default",
-      "prompt": "Use experiment-lab deterministic CLI only: uv run python -m app.agent_skills.experiment_lab_cli ... . Do not import random internals."
+      "model": "siemens-sdc-openai-responses/gpt-5.3-codex",
+      "reasoningEffort": "medium",
+      "temperature": 0.1,
+      "prompt": "Use experiment-lab deterministic CLI only: uv run python -m app.agent_skills.experiment_lab_cli ... . Do not import random internals. First line of every report: 'Model: gpt-5.3-codex / Reasoning: medium / Role: experiment-runner'."
     },
     "refresh-compare-runner": {
       "mode": "subagent",
       "description": "Runs refresh-compare analysis and reports prediction drift.",
-      "model": "siemens-sdc/claude-opus-4-7@default",
-      "prompt": "Run refresh-compare with experiment-lab CLI and return structured differences only."
+      "model": "siemens-sdc-openai-responses/gpt-5.3-codex",
+      "reasoningEffort": "medium",
+      "temperature": 0.1,
+      "prompt": "Run refresh-compare with experiment-lab CLI and return structured differences only. First line of every report: 'Model: gpt-5.3-codex / Reasoning: medium / Role: refresh-compare-runner'."
     },
     "decision-card-runner": {
       "mode": "subagent",
       "description": "Builds and validates decision-card outputs from lab reports.",
-      "model": "siemens-sdc/claude-opus-4-7@default",
-      "prompt": "Use lab report outputs and decision card payloads from experiment-lab CLI. Keep behavior deterministic."
+      "model": "siemens-sdc-openai-responses/gpt-5.3-codex",
+      "reasoningEffort": "medium",
+      "temperature": 0.1,
+      "prompt": "Use lab report outputs and decision card payloads from experiment-lab CLI. Keep behavior deterministic. First line of every report: 'Model: gpt-5.3-codex / Reasoning: medium / Role: decision-card-runner'."
     },
     "text-engine-runner": {
       "mode": "subagent",
       "description": "Validates text-engine processing for experiment-lab scenarios.",
-      "model": "siemens-sdc/claude-opus-4-7@default",
-      "prompt": "Use local deterministic text-engine and lab fixtures only; no external API calls."
+      "model": "siemens-sdc-openai-responses/gpt-5.3-codex",
+      "reasoningEffort": "medium",
+      "temperature": 0.1,
+      "prompt": "Use local deterministic text-engine and lab fixtures only; no external API calls. First line of every report: 'Model: gpt-5.3-codex / Reasoning: medium / Role: text-engine-runner'."
+    },
+
+    // ────────────────────────────────────────────────────────────────
+    //  HACKATHON SUBAGENTS (Agentic Decision Lab / MarketTwin)
+    //  Pipeline: Apify → n8n → cleaned data → experiment-lab → Supabase
+    //  Hard rules (also see hackathon/AGENTS.md when scaffolded):
+    //    - small bounded runs only (cap ≤20 items per Apify scenario)
+    //    - no production writes, no hardcoded secrets
+    //    - first line of every report:
+    //      "Model: gpt-5.3-codex / Reasoning: medium / Role: <name> / Status: ..."
+    // ────────────────────────────────────────────────────────────────
+    "apify-mcp-connectivity": {
+      "mode": "subagent",
+      "description": "Verifies Apify MCP connectivity and lists available actor/dataset tools. Use this before any actor run.",
+      "model": "siemens-sdc-openai-responses/gpt-5.3-codex",
+      "reasoningEffort": "medium",
+      "temperature": 0.1,
+      "prompt": "Confirm Apify MCP is reachable and report which actor/dataset tools are exposed. Do NOT run any actor. Do NOT call destructive/admin tools. Report: Model, Reasoning level, Role, Status, Tools discovered, Errors, Next step."
+    },
+    "apify-actor-runner": {
+      "mode": "subagent",
+      "description": "Discovers an Apify actor for a stated scenario and performs ONE small bounded run (≤20 items). Saves raw output under data/apify/.",
+      "model": "siemens-sdc-openai-responses/gpt-5.3-codex",
+      "reasoningEffort": "medium",
+      "temperature": 0.1,
+      "prompt": "Pick one Apify actor matching the requested scenario. Run it ONCE with maxItems ≤ 20. Save raw dataset JSON under data/apify/<scenario>_<timestamp>.json. Never write outside data/apify/. Report: Model, Reasoning, Role, Status, Actor ID, Run ID, Item count, Artifact path, Errors, Next step."
+    },
+    "data-cleaner": {
+      "mode": "subagent",
+      "description": "Normalizes raw Apify output into the documented competitor/price schema. Writes cleaned rows + invalid rows separately. Deterministic.",
+      "model": "siemens-sdc-openai-responses/gpt-5.3-codex",
+      "reasoningEffort": "medium",
+      "temperature": 0.0,
+      "prompt": "Read one raw file from data/apify/. Normalize to fields: product_name, brand, competitor, price, currency, availability, url, observed_at, raw_title, raw. If price/currency/url missing → keep raw row but mark normalized row invalid. Write cleaned NDJSON to data/cleaned/<same-stem>.ndjson, invalid rows to data/cleaned/<same-stem>.invalid.ndjson. Report: Model, Reasoning, Role, Status, Rows in, Rows valid, Rows invalid, Artifact paths, Errors, Next step."
+    },
+    "lab-ingestion": {
+      "mode": "subagent",
+      "description": "Feeds cleaned data into experiment-lab and triggers analysis. Writes outputs under experiments/.",
+      "model": "siemens-sdc-openai-responses/gpt-5.3-codex",
+      "reasoningEffort": "medium",
+      "temperature": 0.0,
+      "prompt": "Read cleaned NDJSON from data/cleaned/. Hand off to experiment-lab via its CLI (do NOT import internals). Save the resulting LabRunReport JSON under experiments/<scenario>_<timestamp>.json. Report: Model, Reasoning, Role, Status, Input file, Lab(s) run, Output path, Errors, Next step."
+    },
+    "qa-reporter": {
+      "mode": "subagent",
+      "description": "End-of-pipeline QA. Reads artifacts in data/apify, data/cleaned, experiments/ and produces a single human-readable summary under reports/.",
+      "model": "siemens-sdc-openai-responses/gpt-5.3-codex",
+      "reasoningEffort": "medium",
+      "temperature": 0.1,
+      "prompt": "Inspect the latest artifact in each of data/apify/, data/cleaned/, experiments/. Verify schemas, row counts, and that the pipeline ran end-to-end. Write a markdown summary to reports/<timestamp>.md covering: what worked, what failed, how to fix each failure, model/reasoning used per step. Report inline: Model, Reasoning, Role, Status, Report path, Errors, Next step."
     }
   },
 

@@ -1,0 +1,120 @@
+{
+  "name": "hackathon · Workflow 1 · Scheduled scrape (synthetic / cached fixture)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            { "field": "minutes", "minutesInterval": 5 }
+          ]
+        }
+      },
+      "id": "11111111-aaaa-4aaa-aaaa-111111111111",
+      "name": "Schedule (every 5 min)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.MARKETWIN_API_URL || 'http://host.docker.internal:8001'}}/scrapes/run",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={ \"source\": \"cached\", \"actor_id\": \"apify/web-scraper\", \"max_items\": 20 }",
+        "options": { "timeout": 15000 }
+      },
+      "id": "22222222-aaaa-4aaa-aaaa-222222222222",
+      "name": "Trigger scrape (POST /scrapes/run)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "conditions": [
+            {
+              "id": "succeeded-or-fallback",
+              "leftValue": "={{$json.status}}",
+              "rightValue": "succeeded",
+              "operator": { "type": "string", "operation": "equals" }
+            }
+          ],
+          "combinator": "or"
+        }
+      },
+      "id": "33333333-aaaa-4aaa-aaaa-333333333333",
+      "name": "Scrape OK?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [720, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.MARKETWIN_API_URL || 'http://host.docker.internal:8001'}}/scrapes/{{$json.id}}/analyze",
+        "sendBody": false,
+        "options": { "timeout": 30000 }
+      },
+      "id": "44444444-aaaa-4aaa-aaaa-444444444444",
+      "name": "Analyze (POST /scrapes/{id}/analyze)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [960, 220]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{$env.MARKETWIN_API_URL || 'http://host.docker.internal:8001'}}/dashboard",
+        "options": { "timeout": 10000 }
+      },
+      "id": "55555555-aaaa-4aaa-aaaa-555555555555",
+      "name": "Refresh dashboard snapshot",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1200, 220]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            { "name": "outcome", "value": "scrape-not-succeeded; check /agent-logs" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "66666666-aaaa-4aaa-aaaa-666666666666",
+      "name": "Skip (log only)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [960, 400]
+    }
+  ],
+  "connections": {
+    "Schedule (every 5 min)": {
+      "main": [[{ "node": "Trigger scrape (POST /scrapes/run)", "type": "main", "index": 0 }]]
+    },
+    "Trigger scrape (POST /scrapes/run)": {
+      "main": [[{ "node": "Scrape OK?", "type": "main", "index": 0 }]]
+    },
+    "Scrape OK?": {
+      "main": [
+        [{ "node": "Analyze (POST /scrapes/{id}/analyze)", "type": "main", "index": 0 }],
+        [{ "node": "Skip (log only)", "type": "main", "index": 0 }]
+      ]
+    },
+    "Analyze (POST /scrapes/{id}/analyze)": {
+      "main": [[{ "node": "Refresh dashboard snapshot", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "tags": [{ "name": "hackathon" }],
+  "meta": {
+    "provenance": "Built by claude-opus-4-7 (substitute); subagent runtime targets gpt-5.3-codex / reasoning=medium",
+    "data_source": "synthetic / cached fixture",
+    "scope": "hackathon subsystem only — DO NOT mix with Signal Foundry sf_* workflows"
+  }
+}

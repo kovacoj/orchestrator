@@ -1,0 +1,111 @@
+{
+  "name": "hackathon · Workflow 1b · Scheduled scrape (live Apify)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            { "field": "minutes", "minutesInterval": 15 }
+          ]
+        }
+      },
+      "id": "11111111-bbbb-4bbb-bbbb-111111111111",
+      "name": "Schedule (every 15 min)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.MARKETWIN_API_URL || 'http://host.docker.internal:8001'}}/scrapes/run",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={ \"source\": \"apify\", \"actor_id\": \"{{$env.APIFY_ACTOR_ID || 'apify/web-scraper'}}\", \"max_items\": 20 }",
+        "options": { "timeout": 180000 }
+      },
+      "id": "22222222-bbbb-4bbb-bbbb-222222222222",
+      "name": "Trigger scrape (POST /scrapes/run, source=apify)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "conditions": [
+            {
+              "id": "is-succeeded",
+              "leftValue": "={{$json.status}}",
+              "rightValue": "succeeded",
+              "operator": { "type": "string", "operation": "equals" }
+            },
+            {
+              "id": "is-fallback",
+              "leftValue": "={{$json.status}}",
+              "rightValue": "fallback_to_cache",
+              "operator": { "type": "string", "operation": "equals" }
+            }
+          ],
+          "combinator": "or"
+        }
+      },
+      "id": "33333333-bbbb-4bbb-bbbb-333333333333",
+      "name": "Scrape usable?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [720, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.MARKETWIN_API_URL || 'http://host.docker.internal:8001'}}/scrapes/{{$json.id}}/analyze",
+        "options": { "timeout": 30000 }
+      },
+      "id": "44444444-bbbb-4bbb-bbbb-444444444444",
+      "name": "Analyze",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [960, 220]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            { "name": "outcome", "value": "apify failed AND no cached fallback; inspect /agent-logs" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "55555555-bbbb-4bbb-bbbb-555555555555",
+      "name": "Skip (log only)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [960, 400]
+    }
+  ],
+  "connections": {
+    "Schedule (every 15 min)": {
+      "main": [[{ "node": "Trigger scrape (POST /scrapes/run, source=apify)", "type": "main", "index": 0 }]]
+    },
+    "Trigger scrape (POST /scrapes/run, source=apify)": {
+      "main": [[{ "node": "Scrape usable?", "type": "main", "index": 0 }]]
+    },
+    "Scrape usable?": {
+      "main": [
+        [{ "node": "Analyze", "type": "main", "index": 0 }],
+        [{ "node": "Skip (log only)", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "tags": [{ "name": "hackathon" }],
+  "meta": {
+    "provenance": "Built by claude-opus-4-7 (substitute); subagent runtime targets gpt-5.3-codex / reasoning=medium",
+    "data_source": "live Apify with cached-fixture fallback",
+    "scope": "hackathon subsystem only",
+    "notes": "Set APIFY_TOKEN env var; backend handles credential. Set APIFY_ACTOR_ID env var to pick an actor."
+  }
+}
