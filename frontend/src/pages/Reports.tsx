@@ -4,6 +4,7 @@ import { reports } from "../data/demoData";
 export default function Reports() {
   return (
     <PageShell
+      badge={{ label: "demo data — no reports endpoint yet" }}
       title="Reports"
       subtitle="Generated executive reports summarising the current situation, the incident, the forecasts, and the methodology."
     >

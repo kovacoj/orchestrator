@@ -29,6 +29,7 @@ function statusChip(status: string): string {
 export default function Competitors() {
   return (
     <PageShell
+      badge={{ label: "demo data — no competitor endpoint yet" }}
       title="Competitors"
       subtitle="Tracked competitor moves across Prague. Promotions and price changes are treated as secondary context to operational signals."
     >

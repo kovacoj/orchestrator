@@ -1,8 +1,9 @@
 import { AlertTriangle, MapPin, Lightbulb } from "lucide-react";
-import { mainAlert } from "../../data/demoData";
+import { mainAlert as demoMainAlert, type MainAlert } from "../../data/demoData";
 import { riskColor } from "../../utils/formatters";
 
-export function AlertCard() {
+export function AlertCard({ alert }: { alert?: MainAlert } = {}) {
+  const mainAlert = alert ?? demoMainAlert;
   return (
     <div className="card overflow-hidden">
       <div className="px-5 py-4 border-b border-slate-200 bg-rose-50/40 flex items-start justify-between gap-4">

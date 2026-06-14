@@ -6,6 +6,7 @@ const dqReport = reports.find((r) => r.id === "REP_005");
 export default function DataQuality() {
   return (
     <PageShell
+      badge={{ label: "demo data — no data-quality endpoint yet", tone: "warning" }}
       title="Data Quality"
       subtitle="Data provenance, coverage, and known limitations for this demo."
     >

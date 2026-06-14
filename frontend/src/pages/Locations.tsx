@@ -28,6 +28,7 @@ function heatColor(v: number): string {
 export default function Locations() {
   return (
     <PageShell
+      badge={{ label: "demo data — no per-location endpoint yet" }}
       title="Locations"
       subtitle="All 10 Prague locations ranked by risk, with sentiment heatmap and complaint counts."
     >
